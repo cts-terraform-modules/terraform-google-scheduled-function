@@ -49,8 +49,8 @@ module "pubsub_topic" {
 
 resource "google_cloudfunctions_function" "main" {
   name                  = var.function_name
-  source_archive_bucket = google_storage_bucket.main.name
-  source_archive_object = google_storage_bucket_object.main.name
+  source_archive_bucket = var.from_repo ? null : google_storage_bucket.main[0].name
+  source_archive_object = var.from_repo ? null : google_storage_bucket_object.main[0].name
   description           = var.function_description
   available_memory_mb   = var.function_available_memory_mb
   timeout               = var.function_timeout_s
@@ -58,7 +58,7 @@ resource "google_cloudfunctions_function" "main" {
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
-    resource   = module.pubsub_topic.topic
+    resource   =  module.pubsub_topic.topic
 
     failure_policy {
       retry = var.function_event_trigger_failure_policy_retry
@@ -71,24 +71,33 @@ resource "google_cloudfunctions_function" "main" {
   project               = var.project_id
   region                = var.region
   service_account_email = var.function_service_account_email
+  dynamic "source_repository" {
+    for_each = var.from_repo ? [var.repo_url] : []
+    content {
+      url = source_repository.value
+    }
+  }
 }
 
 data "archive_file" "main" {
+  count       = var.from_repo ? 0 : 1
   type        = "zip"
   output_path = pathexpand("${var.function_source_directory}.zip")
   source_dir  = pathexpand(var.function_source_directory)
 }
 
 resource "random_string" "random_suffix" {
+  count   = var.from_repo ? 0 : 1
   length  = 4
   upper   = "false"
   special = "false"
 }
 
 resource "google_storage_bucket" "main" {
+  count = var.from_repo ? 0 : 1
   name = coalesce(
     var.bucket_name,
-    "${var.project_id}-scheduled-function-${random_string.random_suffix.result}",
+    "${var.project_id}-scheduled-function-${random_string.random_suffix[0].result}",
   )
   force_destroy = "true"
   location      = var.region
@@ -98,9 +107,10 @@ resource "google_storage_bucket" "main" {
 }
 
 resource "google_storage_bucket_object" "main" {
-  name                = "event_function-${random_string.random_suffix.result}.zip"
-  bucket              = google_storage_bucket.main.name
-  source              = data.archive_file.main.output_path
+  count               = var.from_repo ? 0 : 1
+  name                = "event_function-${random_string.random_suffix[0].result}.zip"
+  bucket              = google_storage_bucket.main[0].name
+  source              = data.archive_file.main[0].output_path
   content_disposition = "attachment"
   content_encoding    = "gzip"
   content_type        = "application/zip"
