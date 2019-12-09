@@ -1,0 +1,1 @@
+../../../examples/source_repo/variables.tf
