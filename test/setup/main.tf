@@ -32,7 +32,8 @@ module "project" {
     "cloudscheduler.googleapis.com",
     "storage-component.googleapis.com",
     "pubsub.googleapis.com",
-    "appengine.googleapis.com"
+    "appengine.googleapis.com",
+    "sourcerepo.googleapis.com"
   ]
 }
 

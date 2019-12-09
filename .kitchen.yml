@@ -39,3 +39,18 @@ suites:
             - gcloud
     provisioner:
       name: terraform
+  - name: "source_repo"
+    driver:
+      name: "terraform"
+      command_timeout: 1800
+      root_module_directory: test/fixtures/source_repo
+    verifier:
+      name: terraform
+      color: true
+      systems:
+        - name: source_repo
+          backend: local
+          controls:
+            - gcloud
+    provisioner:
+      name: terraform
