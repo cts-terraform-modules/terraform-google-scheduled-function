@@ -86,6 +86,7 @@ variable "function_source_archive_bucket_labels" {
 variable "function_source_directory" {
   type        = string
   description = "The contents of this directory will be archived and used as the function source."
+  default     = ""
 }
 
 variable "function_timeout_s" {
@@ -132,4 +133,16 @@ variable "time_zone" {
   type        = string
   description = "The timezone to use in scheduler"
   default     = "Etc/UTC"
+}
+
+variable "from_repo" {
+  type        = bool
+  description = "Set to true if the function code will be in a repository"
+  default     = false
+}
+
+variable "repo_url" {
+  type        = string
+  description = "The URL of the Cloud Source Repository which holds the code"
+  default     = ""
 }
