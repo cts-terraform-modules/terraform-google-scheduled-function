@@ -136,13 +136,13 @@ variable "time_zone" {
 }
 
 variable "from_repo" {
-  type = bool
+  type        = bool
   description = "Set to true if the function code will be in a repository"
-  default = false
+  default     = false
 }
 
 variable "repo_url" {
-  type = string
+  type        = string
   description = "The URL of the Cloud Source Repository which holds the code"
-  default = ""
+  default     = ""
 }

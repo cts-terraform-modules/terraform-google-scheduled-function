@@ -58,7 +58,7 @@ resource "google_cloudfunctions_function" "main" {
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
-    resource   =  module.pubsub_topic.topic
+    resource   = module.pubsub_topic.topic
 
     failure_policy {
       retry = var.function_event_trigger_failure_policy_retry

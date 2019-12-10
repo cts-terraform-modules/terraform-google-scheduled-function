@@ -38,7 +38,7 @@ resource "null_resource" "push_to_git" {
     command = "${path.module}/git-setup.sh"
 
     environment = {
-      URL = google_sourcerepo_repository.default.url
+      URL        = google_sourcerepo_repository.default.url
       LOCAL_REPO = "${path.module}/function_source"
     }
   }
@@ -52,15 +52,15 @@ module "source_repo_example" {
     google = google-beta
   }
 
-  source                    = "../../"
-  function_runtime          = "python37"
-  project_id                = var.project_id
-  job_name                  = "hello-world"
-  job_schedule              = "*/5 * * * *"
-  function_entry_point      = "hello_world"
-  function_name             = "testfunction-foo"
-  region                    = var.region
-  topic_name                = "source_repo_example_topic"
-  from_repo                 = true
-  repo_url                  = "https://source.developers.google.com/projects/${var.project_id}/repos/${google_sourcerepo_repository.default.name}/moveable-aliases/*/paths//"
+  source               = "../../"
+  function_runtime     = "python37"
+  project_id           = var.project_id
+  job_name             = "hello-world"
+  job_schedule         = "*/5 * * * *"
+  function_entry_point = "hello_world"
+  function_name        = "testfunction-foo"
+  region               = var.region
+  topic_name           = "source_repo_example_topic"
+  from_repo            = true
+  repo_url             = "https://source.developers.google.com/projects/${var.project_id}/repos/${google_sourcerepo_repository.default.name}/moveable-aliases/*/paths//"
 }
